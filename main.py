@@ -1,5 +1,6 @@
 import os
 import time
+import sqlite3
 
 print("Welcome to the General Knowledge Quiz")
 from resources.login import Validation
@@ -22,7 +23,7 @@ while Validation.login_success == True:
 
             print(" [1] View Student Profile") # student profile contains things such as amount of times tried a quiz, all their complete quizzes, a total score, score grade and percentage of a quiz, their difficulty
             print(" [2] View Quiz Statistics") # outputs quiz average grade, average score, average diffiuclty, people who have done the quiz, highest score
-            print(" [3] Add Admin Account\n")
+            print(" [3] Add or Remove Admin Account\n")
 
             print(" [4] Logout\n")
 
@@ -68,7 +69,7 @@ while Validation.login_success == True:
                 print("NOT YET ADDED GO AWAY") # PLACEHOLDER
             elif choice == "3":
                 os.system('cls')
-                choice_admin = input("Please choose from the options below: \n\n   [1] New Admin Account\n   [2] Existing User\n\nChoice: ")
+                choice_admin = input("Please choose from the options below: \n\n   [1] New Admin Account\n   [2] Existing User\n   [3] Remove Admin\n\nChoice: ")
                 if choice_admin == "1":
                     os.system('cls')
                     first_name = input("Please type in the Admins first name: ") # string varible to hold their first name
@@ -89,29 +90,61 @@ while Validation.login_success == True:
                             print("Passwords do not match, please try again. ") # displays error and asks to type their password in again
                             pass_match = False # keeps the loop going.
                 elif choice_admin == '2':
+                    os.system('cls')
                     user_search = input("[SEARCH] Username to Add: ")
                     for x in range(0, len(Validation.data)): # loop to go through the whole csv data and check the username
                         if Validation.data[x][2].lower() == user_search.lower(): # makes the username lower to make sure it is not case sensitive
                             os.system('cls')
                             print("----------ACCOUNT DETAILS----------\n")
                             found_account = True
-                        else: # if the first row didn't match the username given, go to the next one
+                        else:
                             found_account = False
-                            x = x + 1
+                            x = x + 1   # if the first row didn't match the username given, go to the next one
                         if found_account == True:
-                                print("Name:" + Validation.data[x][0] + "\n" + "Surname:" + Validation.data[x][1] + "\n" + "Username:" + Validation.data[x][2] + "\n" + "Password: ********" + "\n\n----------QUIZ STATISITCS----------\n\n" + quiz1 + ": " + Validation.data[x][5] + "\n" + quiz2 + ": " + Validation.data[x][6] + "\n" + quiz3 + ": " + Validation.data[x][7])
+                                print("Name:" + str(Validation.data[x][0]) + "\n" + "Surname:" + str(Validation.data[x][1]) + "\n" + "Username:" + str(Validation.data[x][2]) + "\n" + "Password: ********" + "\n\n----------QUIZ STATISITCS----------\n\n" + quiz1 + ": " + str(Validation.data[x][4]) + "\n" + quiz2 + ": " + str(Validation.data[x][5]) + "\n" + quiz3 + ": " + str(Validation.data[x][6]))
                                 add = input("\nDo you wish to add this user to the Administrator list? [Y/N] \n Note: THIS WILL GIVE THEM FULL ACCESS TO THE ADMIN PANEL! \n Choice: ")
                                 if add == "Y":
-                                    admin_status = 1
-                                    with open('data\database.csv', 'a') as f: # writes the new user to the csv file database
-                                        test_1_score = "NOT ATTEMPTED"
-                                        test_2_score = "NOT ATTEMPTED"
-                                        test_3_score = "NOT ATTEMPTED"
-                                        f.write( Validation.data[x][0] + "," +  Validation.data[x][1] + "," +  Validation.data[x][2] + ',' +  Validation.data[x][3] + ',' + str(admin_status) + "," + test_1_score + ',' + test_2_score + ',' + test_3_score + '\n')
+
+                                    connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+                                    cur = connection.cursor()
+
+                                    cur.execute("UPDATE accounts SET admin = (?) WHERE name = (?)", (1, user_search))
+                                    connection.commit()
+                                    connection.close()
+
                                     print("User: " + Validation.data[x][2] + " has been added to the admin list.")
 
                                 elif add == "N":
                                     print("User has NOT been added to the Adminstrator list.\n Returning to the Main Menu.")
+                                    time.sleep(2)
+                                os.system('cls')
+                elif choice_admin == '3':
+                    os.system('cls')
+                    user_search = input("[SEARCH] Username to Remove: ")
+                    for x in range(0, len(Validation.data)): # loop to go through the whole csv data and check the username
+                        if Validation.data[x][2].lower() == user_search.lower(): # makes the username lower to make sure it is not case sensitive
+                            os.system('cls')
+                            print("----------ACCOUNT DETAILS----------\n")
+                            found_account = True
+                        else:
+                            found_account = False
+                            x = x + 1   # if the first row didn't match the username given, go to the next one
+                        if found_account == True:
+                                print("Name:" + str(Validation.data[x][0]) + "\n" + "Surname:" + str(Validation.data[x][1]) + "\n" + "Username:" + str(Validation.data[x][2]) + "\n" + "Password: ********" + "\n\n----------QUIZ STATISITCS----------\n\n" + quiz1 + ": " + str(Validation.data[x][4]) + "\n" + quiz2 + ": " + str(Validation.data[x][5]) + "\n" + quiz3 + ": " + str(Validation.data[x][6]))
+                                add = input("\nDo you wish to REMOVE this user to the Administrator list? [Y/N] \n Note: THIS WILL REMOVE FULL ACCESS TO THE ADMIN PANEL AND MAKE THEM A STUDENT ACCOUNT! \n Choice: ")
+                                if add == "Y":
+
+                                    connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+                                    cur = connection.cursor()
+
+                                    cur.execute("UPDATE accounts SET admin = (?) WHERE name = (?)", (0, user_search))
+                                    connection.commit()
+                                    connection.close()
+
+                                    print("User: " + Validation.data[x][2] + " has been removed to the admin list.")
+
+                                elif add == "N":
+                                    print("User has NOT been removed to the Adminstrator list.\n Returning to the Main Menu.")
                                     time.sleep(2)
                                 os.system('cls')
 
@@ -138,15 +171,20 @@ while Validation.login_success == True:
 
             if choice.lower() == "1":
                 os.system('cls')
-                Quiz = Quiz() #this defines that the "Validation" is using the "Validation()" class
+                Quiz = Quiz() #this defines that the "Quiz" is using the "Quiz()" class from quiz_format.py file
                 Quiz.get_questions(quiz1)
-                Quiz.geography()
+                Quiz.quiz_format(quiz1)
                 Quiz.finalise_score()
-                Quiz.update_database(Validation.current_user)
+                Quiz.update_database(Validation.current_user, quiz1)
 
             elif choice.lower() == "2":
-                print("go to math quiz") # PLACEHOLDER
-                input()
+                os.system('cls')
+                Quiz = Quiz()
+                Quiz.get_questions(quiz2)
+                Quiz.quiz_format(quiz2)
+                Quiz.finalise_score()
+                Quiz.update_database(Validation.current_user, quiz2)
+
             elif choice.lower() == "3":
                 print("go to history quiz") # PLACEHOLDER
                 input()

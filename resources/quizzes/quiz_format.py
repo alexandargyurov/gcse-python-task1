@@ -7,7 +7,6 @@ import sqlite3
 class Quiz:
     def __init__(self):
         self.data = []
-        self.difficulty = ""
         self.total_score = 5
         self.score = 0
         self.percentage = 0
@@ -15,55 +14,62 @@ class Quiz:
 
     def get_questions(self, quiz):
 
-        quiz_to_get = quiz[0:3].lower() + "_q.csv"
-        print(quiz_to_get)
+        quiz_to_get = quiz.lower() + "_q.csv"
+
         with open("resources/quizzes/data/" + quiz_to_get, "r") as f: # opens the csv file called "database.csv" and writes to it
             reader = csv.reader(f)
             self.data = list(reader) # reads the data from csv file
 
-    def quiz_format(self):
-        print("----------QUIZ NAME----------\n") # make it so it is public and not static
+    def quiz_format(self, quiz):
+        print("----------" + quiz + "----------\n") # make it so it is public and not static
 
+        print("You are now entering the " + quiz  + " Test.\nThe test is out of 5 questions.")
+        print("You will be required to input a letter which represents the answer. \nPlease choose carefully as this will be your final answer.")
 
-        for noQ in range(0, len(self.data)):
+        enter = input("Do you wish to continue? [Y/N]   ").lower()
 
-            if self.difficulty == "easy":
-                noQuestions = 4
+        if enter == "y" or "yes":
+            difficulty = input("Please choose your difficulty: [EASY/MEDIUM/HARD] \nDiffuculty: ").lower()
 
-                choices_availblilty = [1,2,3,4]
-                letter_availblilty = ['A','B','C','D']
+            for noQ in range(0, len(self.data)):
 
-            elif self.difficulty == "medium":
-                noQuestions = 5
+                if difficulty == "easy":
+                    noQuestions = 4
 
-                choices_availblilty = [1,2,3,4,5]
-                letter_availblilty = ['A','B','C','D','E']
+                    choices_availblilty = [1,2,3,4]
+                    letter_availblilty = ['A','B','C','D']
 
-            elif self.difficulty == "hard":
-                noQuestions = 6
+                elif difficulty == "medium":
+                    noQuestions = 5
 
-                choices_availblilty = [1,2,3,4,5,6]
-                letter_availblilty = ['A','B','C','D','E','F']
+                    choices_availblilty = [1,2,3,4,5]
+                    letter_availblilty = ['A','B','C','D','E']
 
-            print("Question " + str(noQ) + ":\n" + str(self.data[noQ][0]))
+                elif difficulty == "hard":
+                    noQuestions = 6
 
-            for x in range(0, noQuestions):
-                y = random.choice(choices_availblilty)
-                choices_availblilty.remove(y)
-                if self.data[noQ][y] == self.data[noQ][1]:
-                    correct_answer = letter_availblilty[x]
+                    choices_availblilty = [1,2,3,4,5,6]
+                    letter_availblilty = ['A','B','C','D','E','F']
 
-                print("[" + letter_availblilty[x] + "]. " + self.data[noQ][y])
+                print("Question " + str(noQ) + ":\n" + str(self.data[noQ][0]))
 
-                x = x + 1
+                for x in range(0, noQuestions):
+                    y = random.choice(choices_availblilty)
+                    choices_availblilty.remove(y)
+                    if self.data[noQ][y] == self.data[noQ][1]:
+                        correct_answer = letter_availblilty[x]
 
-            answer = input("Please choose the correct answer: ")
+                    print("[" + letter_availblilty[x] + "]. " + self.data[noQ][y])
 
-            if answer == correct_answer:
-                print("Correct!\n")
-                self.score = self.score + 1
-            else:
-                print("Incorrect!\n")
+                    x = x + 1
+
+                answer = input("Please choose the correct answer: ")
+
+                if answer == correct_answer:
+                    print("Correct!\n")
+                    self.score = self.score + 1
+                else:
+                    print("Incorrect!\n")
 
 
 
@@ -85,24 +91,10 @@ class Quiz:
 
         print("You have now completed the" + " GEOGRAPHY QUIZ" + "\nTotal Score: " + str(self.score) + "\nPercentage: " + str(self.percentage) + "\nGrade: " + str(self.grade))
 
-    def update_database(self, user_name):
+    def update_database(self, user_name, quiz):
         connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
         cur = connection.cursor()
 
-        cur.execute("UPDATE accounts SET quiz_1 = (?) WHERE name = (?)", (self.score, user_name))
+        cur.execute("UPDATE accounts SET (?) = (?) WHERE name = (?)", (quiz, self.score, user_name))
         connection.commit()
         connection.close()
-
-    def geography(self):
-        import sys
-        print("You are now entering the Geography Test.\nThe test is out of 5 questions.")
-        print("You will be required to input a letter which represents the answer. \nPlease choose carefully as this will be your final answer.")
-
-        enter = input("Do you wish to continue? [Y/N]   ").lower()
-
-        if enter == "y" or "yes":
-            self.difficulty = input("Please choose your difficulty: [EASY/MEDIUM/HARD] \nDiffuculty: ").lower()
-
-            self.quiz_format()
-
-
