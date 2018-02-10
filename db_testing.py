@@ -1,9 +1,8 @@
 import sqlite3
 
-conn = sqlite3.connect("data\database.db")
-c = conn.cursor()
 
-c.execute("SELECT username, password FROM accounts")
-data = c.fetchall()
+connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+c = connection.cursor()
 
-print(data[0][1])
+c.execute("UPDATE accounts SET quiz_1 = '2' WHERE name = 'Lee'")
+connection.commit()

@@ -53,7 +53,7 @@ while Validation.login_success == True:
                             found_account = False
                             x = x + 1
                         if found_account == True:
-                                print("Name:" + Validation.data[x][0] + "\n" + "Surname:" + Validation.data[x][1] + "\n" + "Username:" + Validation.data[x][2] + "\n" + "Password: ********" + "\n\n----------QUIZ STATISITCS----------\n\n" + quiz1 + ": " + Validation.data[x][5] + "\n" + quiz2 + ": " + Validation.data[x][6] + "\n" + quiz3 + ": " + Validation.data[x][7])
+                                print("Name:" + str(Validation.data[x][0]) + "\n" + "Surname:" + str(Validation.data[x][1]) + "\n" + "Username:" + str(Validation.data[x][2]) + "\n" + "Password: ********" + "\n\n----------QUIZ STATISITCS----------\n\n" + quiz1 + ": " + str(Validation.data[x][4]) + "\n" + quiz2 + ": " + str(Validation.data[x][5]) + "\n" + quiz3 + ": " + str(Validation.data[x][6]))
                                 input("\nPress any button to return back.")
                                 os.system('cls')
                 else:

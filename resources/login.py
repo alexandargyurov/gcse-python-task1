@@ -23,7 +23,7 @@ class Validation: # new class called Validation
         self.login_success = False
 
     def read_database(self): # this reads the file with the usernames and passwords
-        c.execute("SELECT username, password, admin FROM accounts")
+        c.execute("SELECT * FROM accounts")
         self.data = c.fetchall()
 
     def create_username(self, name, surname, password): # this function creates a new user with the information provided
@@ -39,14 +39,14 @@ class Validation: # new class called Validation
     def check_account(self, username, password): # this checks the username and sees if it matches a username from the database we read
 
         for x in range(0, len(self.data)): # loop to go through the whole sqlite3 database list and check the username
-            if self.data[x][0].lower() == username.lower(): # makes the username lower to make sure it is not case sensitive
+            if self.data[x][2].lower() == username.lower(): # makes the username lower to make sure it is not case sensitive
 
-                if self.data[x][1] == password:
+                if self.data[x][3] == password:
                     self.username_match = True # makes the varible true
                     self.password_match = True
                     self.current_user = self.data[x][0]
 
-                    if self.data[x][2] == 1:
+                    if self.data[x][7] == 1:
                         self.admin_account = True # sets value to True so later I can use it to show more options for the admin
                                                                                                                # ## ## ## CHANGES ## ## ##
             else: # if the first row didn't match the username given, go to the next one

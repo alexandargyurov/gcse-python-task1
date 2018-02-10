@@ -2,6 +2,7 @@ import sys
 import time
 import csv
 import random
+import sqlite3
 
 class Quiz:
     def __init__(self):
@@ -82,7 +83,12 @@ class Quiz:
         print("You have now completed the" + " GEOGRAPHY QUIZ" + "\nTotal Score: " + str(self.score) + "\nPercentage: " + str(self.percentage) + "\nGrade: " + str(self.grade))
 
     def update_database(self):
-        input()
+        connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+        cur = connection.cursor()
+
+        cur.execute("UPDATE accounts SET quiz_1 = (?) WHERE name = 'Lee'", (self.score,))
+        connection.commit()
+        connection.close()
 
     def geography(self):
         import sys
@@ -101,3 +107,4 @@ Quiz = Quiz() #this defines that the "Validation" is using the "Validation()" cl
 Quiz.get_questions()
 Quiz.geography()
 Quiz.finalise_score()
+Quiz.update_database()
