@@ -3,6 +3,7 @@ import time
 
 print("Welcome to the General Knowledge Quiz")
 from resources.login import Validation
+from resources.quizzes.quiz_format import Quiz
 
 tests = 0 # PLACEOLDER
 quiz1 = "Geography"
@@ -131,17 +132,22 @@ while Validation.login_success == True:
             print("You have completed a total of:", tests, "quizzes.")
             print("Please see below which quizzes have been assigned below. \n")
 
-            print(quiz1 + "\n" + quiz2 + "\n" + quiz3)
+            print("[1] " + quiz1 + "\n" + "[2] " + quiz2 + "\n" + "[3] " + quiz3)
 
             choice = input("\nPlease input which Quiz you would like to do.\n(To view statistics, please type 'Stats' to view your previous quiz resualts. )\nChoose: ")
 
-            if choice.lower() == "geograpghy":
-                print("go to geo quiz") # PLACEHOLDER
-                input()
-            elif choice.lower() == "math" or "mathmatics" or "maths":
+            if choice.lower() == "1":
+                os.system('cls')
+                Quiz = Quiz() #this defines that the "Validation" is using the "Validation()" class
+                Quiz.get_questions(quiz1)
+                Quiz.geography()
+                Quiz.finalise_score()
+                Quiz.update_database(Validation.current_user)
+
+            elif choice.lower() == "2":
                 print("go to math quiz") # PLACEHOLDER
                 input()
-            elif choice.lower() == "history":
+            elif choice.lower() == "3":
                 print("go to history quiz") # PLACEHOLDER
                 input()
             else:

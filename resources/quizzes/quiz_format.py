@@ -13,8 +13,11 @@ class Quiz:
         self.percentage = 0
         self.grade = ""
 
-    def get_questions(self):
-        with open('data\geo_q.csv', 'r') as f: # opens the csv file called "database.csv" and writes to it
+    def get_questions(self, quiz):
+
+        quiz_to_get = quiz[0:3].lower() + "_q.csv"
+        print(quiz_to_get)
+        with open("resources/quizzes/data/" + quiz_to_get, "r") as f: # opens the csv file called "database.csv" and writes to it
             reader = csv.reader(f)
             self.data = list(reader) # reads the data from csv file
 
@@ -82,11 +85,11 @@ class Quiz:
 
         print("You have now completed the" + " GEOGRAPHY QUIZ" + "\nTotal Score: " + str(self.score) + "\nPercentage: " + str(self.percentage) + "\nGrade: " + str(self.grade))
 
-    def update_database(self):
+    def update_database(self, user_name):
         connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
         cur = connection.cursor()
 
-        cur.execute("UPDATE accounts SET quiz_1 = (?) WHERE name = 'Lee'", (self.score,))
+        cur.execute("UPDATE accounts SET quiz_1 = (?) WHERE name = (?)", (self.score, user_name))
         connection.commit()
         connection.close()
 
@@ -103,8 +106,3 @@ class Quiz:
             self.quiz_format()
 
 
-Quiz = Quiz() #this defines that the "Validation" is using the "Validation()" class
-Quiz.get_questions()
-Quiz.geography()
-Quiz.finalise_score()
-Quiz.update_database()
