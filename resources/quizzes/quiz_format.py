@@ -11,7 +11,8 @@ class Quiz:
         self.score = 0
         self.percentage = 0
         self.grade = ""
-
+        self.attempts = 0 # get the amount of times they have done it
+        
     def get_questions(self, quiz):
 
         quiz_to_get = quiz.lower() + "_q.csv"
@@ -24,13 +25,18 @@ class Quiz:
         print("----------" + quiz + "----------\n") # make it so it is public and not static
 
         print("You are now entering the " + quiz  + " Test.\nThe test is out of 5 questions.")
-        print("You will be required to input a letter which represents the answer. \nPlease choose carefully as this will be your final answer.")
+        print("You have attempted this Test: " + self.attempts)
+        print("\nYou will be required to input a letter which represents the answer. \n\nPlease choose carefully as this will be your final answer.")
 
-        enter = input("Do you wish to continue? [Y/N]   ").lower()
-
+        enter = input("\nDo you wish to continue? [Y/N]   ").lower()
+        os.system('cls')
+        
         if enter == "y" or "yes":
-            difficulty = input("Please choose your difficulty: [EASY/MEDIUM/HARD] \nDiffuculty: ").lower()
-
+            
+            self.attempts=+1
+            
+            difficulty = input("\nPlease choose your difficulty:\n [EASY/MEDIUM/HARD] \n\nDiffuculty: ").lower()
+            os.system('cls')
             for noQ in range(0, len(self.data)):
 
                 if difficulty == "easy":
@@ -92,9 +98,15 @@ class Quiz:
         print("You have now completed the" + " GEOGRAPHY QUIZ" + "\nTotal Score: " + str(self.score) + "\nPercentage: " + str(self.percentage) + "\nGrade: " + str(self.grade))
 
     def update_database(self, user_name, quiz):
+        quiz_name = quiz.lower()+"_quiz_stats"
+        
         connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
         cur = connection.cursor()
 
-        cur.execute("UPDATE accounts SET (?) = (?) WHERE name = (?)", (quiz, self.score, user_name))
+        cur.execute("UPDATE accounts SET geography_quiz_score = (?) WHERE name = (?)", (self.score, user_name))
+        cur.execute("UPDATE accounts SET geography_quiz_percentage = (?) WHERE name = (?)", (self.percentage, user_name))
+        cur.execute("UPDATE accounts SET geography_quiz_grade = (?) WHERE name = (?)", (self.grade, user_name))
+        cur.execute("UPDATE accounts SET geography_quiz_attempts = (?) WHERE name = (?)", (self.score, user_name))
+        
         connection.commit()
         connection.close()

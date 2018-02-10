@@ -175,7 +175,6 @@ while Validation.login_success == True:
                 Quiz.get_questions(quiz1)
                 Quiz.quiz_format(quiz1)
                 Quiz.finalise_score()
-                Quiz.update_database(Validation.current_user, quiz1)
 
             elif choice.lower() == "2":
                 os.system('cls')
@@ -183,7 +182,6 @@ while Validation.login_success == True:
                 Quiz.get_questions(quiz2)
                 Quiz.quiz_format(quiz2)
                 Quiz.finalise_score()
-                Quiz.update_database(Validation.current_user, quiz2)
 
             elif choice.lower() == "3":
                 print("go to history quiz") # PLACEHOLDER

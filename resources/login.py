@@ -5,7 +5,7 @@ import os
 import sqlite3
 
 connection = sqlite3.connect("data\database.db")
-c = connection.cursor()
+cur = connection.cursor()
 
 class Validation: # new class called Validation
     def __init__(self):
@@ -23,18 +23,19 @@ class Validation: # new class called Validation
         self.login_success = False
 
     def read_database(self): # this reads the file with the usernames and passwords
-        c.execute("SELECT * FROM accounts")
-        self.data = c.fetchall()
-
+        cur.execute("SELECT * FROM accounts")
+        self.data = cur.fetchall()
+        cur.close()
+        
     def create_username(self, name, surname, password): # this function creates a new user with the information provided
-        self.new_user = surname[0] + name[0] + name[1] + name[2] + time.strftime("%y")
+        self.new_user = surname[0] + name[0] + name[1] + name[2] + time.strftime("%y") 
 
-        print("New Acount Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
-
-        c.execute("INSERT INTO accounts (name, surname, username, password) VALUES (?,?,?,?)",
+        cur.execute("INSERT INTO accounts (name, surname, username, password) VALUES (?,?,?,?)",
         (name, surname, self.new_user, password))
         connection.commit()
-        c.close()
+        cur.close()
+        
+        print("New Acount Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
 
     def check_account(self, username, password): # this checks the username and sees if it matches a username from the database we read
 
@@ -46,7 +47,7 @@ class Validation: # new class called Validation
                     self.password_match = True
                     self.current_user = self.data[x][0]
 
-                    if self.data[x][7] == 1:
+                    if self.data[x][8] == 1:
                         self.admin_account = True # sets value to True so later I can use it to show more options for the admin
                                                                                                                # ## ## ## CHANGES ## ## ##
             else: # if the first row didn't match the username given, go to the next one
@@ -59,17 +60,8 @@ class Validation: # new class called Validation
             self.login_success = True
         else:
             print("Invalid Username or Password") # displays an error if something does not match.
-
-    def create_admim(self, name, surname, user, password): # this function creates a new user with the information provided
-        admin_status = 1
-
-        with open('data\database.csv', 'a') as f: # writes the new user to the csv file database                                               # ## ## ## CHANGES ## ## ##
-            f.write(name + "," + surname + "," + user + ',' + password + ',' + str(admin_status) + "," + test_1_score + ',' + test_2_score + ',' + test_3_score + '\n')                                                 # ## ## ## CHANGES ## ## ##
-
-        print("New Acount Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
-        input()
-
-
+            
+            
 choice = input("Register | Login\n ").lower() # this allows the user to either Login or Register (.lower() makes all the characters login)
 Validation = Validation() # this defines that the "Validation" is using the "Validation()" class
 
@@ -102,3 +94,4 @@ elif choice == "register": # if the user inputed "register"
         else:
             print("Passwords do not match, please try again. ") # displays error and asks to type their password in again
             pass_match = False # keeps the loop going.
+
