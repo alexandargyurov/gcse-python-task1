@@ -3,7 +3,7 @@ import os
 import time
 
 from resources.quizzes.quiz_format import Quiz
-from resources.login import Validation
+from resources.validation import Validation
 from fileinput import close
 
 def start_quiz(quiz):

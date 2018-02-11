@@ -4,7 +4,7 @@ import csv
 import random
 import sqlite3
 
-from resources.login import Validation
+from resources.validation import Validation
 
 class Quiz:
     def __init__(self, quiz, current_user):
