@@ -30,7 +30,7 @@ while quiz_select_menu_active == True:
     
     print("[1] " + quiz1 + "\n" + "[2] " + quiz2 + "\n" + "[3] " + quiz3 + "\n\n[4] Logout")
     
-    choice = input("\nPlease input which Quiz you would like to do.\n(To view statistics, please type 'Stats' to view your previous quiz resualts. )\nChoose: ")
+    choice = input("\nPlease input which Quiz you would like to do.\n\nOption: ")
     
     if choice.lower() == "1":
         start_quiz(quiz1)
