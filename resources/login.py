@@ -35,7 +35,7 @@ class Validation: # new class called Validation
         connection.commit()
         cur.close()
         
-        print("New Acount Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
+        print("New Account Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
 
     def check_account(self, username, password): # this checks the username and sees if it matches a username from the database we read
 

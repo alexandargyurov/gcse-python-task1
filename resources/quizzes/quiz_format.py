@@ -24,7 +24,12 @@ class Quiz:
         quiz_attempts = self.quiz.lower() + "_quiz_attempts"
         cur.execute("SELECT " + quiz_attempts + " FROM accounts WHERE username = (?)", (self.current_user,))
         attempts = cur.fetchone()
-        self.attempts = attempts[0]
+        
+        if attempts == type(None):
+            self.attempts = attempts
+        else:
+            self.attempts = 0
+            
         cur.close()
         
     def get_questions(self):
@@ -94,7 +99,7 @@ class Quiz:
 
     def finalise_score(self):
         self.percentage = (self.score / self.total_score) * 100
-
+            
         if self.percentage <= 20:
             self.grade = "F"
         elif 20 < self.percentage <= 30:
@@ -116,6 +121,8 @@ class Quiz:
         connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
         cur = connection.cursor()
         
+        quiz_db_name = "geography_quiz_stats"
+        
         quiz_score = "geography_quiz_score"
         quiz_percentage = "geography_quiz_percentage"
         quiz_grade = "geography_quiz_grade"
@@ -128,6 +135,34 @@ class Quiz:
         cur.execute("UPDATE accounts SET "+quiz_percentage+" = (?) WHERE name = (?)", (self.percentage, self.current_user))
         cur.execute("UPDATE accounts SET "+quiz_grade+" = (?) WHERE name = (?)", (self.grade, self.current_user))
         cur.execute("UPDATE accounts SET "+quiz_attempts+" = (?) WHERE name = (?)", (attempts, self.current_user))
+        
+        cur.execute("SELECT AVG("+quiz_score+") FROM accounts")
+        average_quiz_score = cur.fetchone()
+        average_quiz_score = round(average_quiz_score[0],1) # rounds the value to 1 decimal place
+        
+        cur.execute("SELECT AVG("+quiz_percentage+") FROM accounts")
+        average_quiz_percentage = cur.fetchone()
+        average_quiz_percentage = round(average_quiz_percentage[0],1) # rounds the value to 1 decimal place
+        
+        cur.execute("SELECT AVG("+quiz_percentage+") FROM accounts")
+        average_quiz_percentage = cur.fetchone()
+        average_quiz_percentage = round(average_quiz_percentage[0],1)
+        
+        cur.execute("SELECT AVG("+quiz_grade+") FROM accounts")
+        average_quiz_grade = cur.fetchone()
+        average_quiz_grade = round(average_quiz_grade[0],1)
+        
+        cur.execute("SELECT TOTAL("+quiz_attempts+") FROM accounts")
+        quiz_attempts = cur.fetchone()
+        quiz_attempts = int(quiz_attempts[0])
+        
+        cur.execute("UPDATE "+quiz_db_name+" SET average_score = (?)", (average_quiz_score,))
+        cur.execute("UPDATE "+quiz_db_name+" SET average_percentage = (?)", (average_quiz_percentage,))
+        cur.execute("UPDATE "+quiz_db_name+" SET average_grade = (?)", (average_quiz_grade,))
+        cur.execute("UPDATE "+quiz_db_name+" SET attempted_times = (?)", (quiz_attempts,))
+        
+        connection.commit()
+        cur.close()
 
         connection.commit()
         cur.close()
