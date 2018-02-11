@@ -24,7 +24,7 @@ class Validation: # new class called Validation
 
     def read_database(self): # this reads the file with the usernames and passwords
         cur.execute("SELECT * FROM accounts")
-        self.data = cur.fetchall()
+        self.data = cur.fetchall()      
         cur.close()
         
     def create_username(self, name, surname, password): # this function creates a new user with the information provided

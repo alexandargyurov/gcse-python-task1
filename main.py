@@ -115,7 +115,7 @@ while Validation.login_success == True:
                                     print("User: " + Validation.data[x][2] + " has been added to the admin list.")
 
                                 elif add == "N":
-                                    print("User has NOT been added to the Adminstrator list.\n Returning to the Main Menu.")
+                                    print("User has NOT been added to the Administrator list.\n Returning to the Main Menu.")
                                     time.sleep(2)
                                 os.system('cls')
                 elif choice_admin == '3':
@@ -144,7 +144,7 @@ while Validation.login_success == True:
                                     print("User: " + Validation.data[x][2] + " has been removed to the admin list.")
 
                                 elif add == "N":
-                                    print("User has NOT been removed to the Adminstrator list.\n Returning to the Main Menu.")
+                                    print("User has NOT been removed to the Administrator list.\n Returning to the Main Menu.")
                                     time.sleep(2)
                                 os.system('cls')
 
@@ -152,7 +152,7 @@ while Validation.login_success == True:
                 os.system('cls')
                 Validation.login_success = False
                 menu_active = False
-                print("You have sucesfully logged off.")
+                print("You have successfully logged off.")
                 time.sleep(2)
 
             else:
@@ -171,18 +171,24 @@ while Validation.login_success == True:
 
             if choice.lower() == "1":
                 os.system('cls')
-                Quiz = Quiz() #this defines that the "Quiz" is using the "Quiz()" class from quiz_format.py file
-                Quiz.get_questions(quiz1)
-                Quiz.quiz_format(quiz1)
+                Quiz = Quiz(quiz1, Validation.current_user) #this defines that the "Quiz" is using the "Quiz()" class from quiz_format.py file
+                Quiz.get_database()
+                
+                Quiz.get_questions()
+                Quiz.quiz_format()
                 Quiz.finalise_score()
-
+                Quiz.update_database()
+                
             elif choice.lower() == "2":
                 os.system('cls')
-                Quiz = Quiz()
-                Quiz.get_questions(quiz2)
-                Quiz.quiz_format(quiz2)
+                Quiz = Quiz(quiz2, Validation.current_user) #this defines that the "Quiz" is using the "Quiz()" class from quiz_format.py file
+                Quiz.get_database()
+                
+                Quiz.get_questions()
+                Quiz.quiz_format()
                 Quiz.finalise_score()
-
+                Quiz.update_database()
+                
             elif choice.lower() == "3":
                 print("go to history quiz") # PLACEHOLDER
                 input()
