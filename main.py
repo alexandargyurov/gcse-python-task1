@@ -12,7 +12,7 @@ while Validation.login_success == True:
     while main_menu_active == True:
         print("Welcome", Validation.current_user, "to the General Knowledge Quiz!")
         if Validation.admin_account == True:
-            import admin_panel
+            import resources.admin_panel
         else:
-            import student_panel
+            import resources.student_panel
             

@@ -1,5 +1,6 @@
 import sqlite3
 import time
+import os
 
 class Validation: # new class called Validation
     def __init__(self):
@@ -7,10 +8,11 @@ class Validation: # new class called Validation
         self.new_user = ""
         self.new_pass = ""
 
-        self.current_user = ""                      # ## ## ## CHANGES ## ## ## #
-
+        self.current_user = ""                      
+        self.current_username = ""
+        
         self.data = []
-        self.admin_account = False                  # ## ## ## CHANGES ## ## ## #
+        self.admin_account = False
 
         self.username_match = False
         self.password_match = False
@@ -30,22 +32,13 @@ class Validation: # new class called Validation
         connection = sqlite3.connect("data\database.db")
         cur = connection.cursor()
         cur.execute("INSERT INTO accounts (name, surname, username, password) VALUES (?,?,?,?)",
-        (name, surname, self.new_user, password))
+        (name, surname, self.new_user.lower(), password))
         connection.commit()
         cur.close()
         
         print("New Account Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
-        
-    def create_admin(self, first_name, surname, user, new_password): # this function creates a new user with the information provided
-        
-        connection = sqlite3.connect("data\database.db")
-        cur = connection.cursor()
-        cur.execute("INSERT INTO accounts (name, surname, username, password, admin) VALUES (?,?,?,?,1)",
-        (first_name, surname, user, new_password))
-        connection.commit()
-        cur.close()
-        
-        print("New Account Created \nYour new username is: " + str(self.new_user)) # displayes their new generated username
+        input("Press Enter to Return back to the Main Menu.")
+        os.system('cls')
 
     def check_account(self, username, password): # this checks the username and sees if it matches a username from the database we read
 
@@ -55,7 +48,10 @@ class Validation: # new class called Validation
                 if self.data[x][3] == password:
                     self.username_match = True # makes the varible true
                     self.password_match = True
+                    
+                    self.current_username = self.data[x][2]
                     self.current_user = self.data[x][0]
+                    
 
                     if self.data[x][4] == 1:
                         self.admin_account = True # sets value to True so later I can use it to show more options for the admin

@@ -1,7 +1,7 @@
 import time
 import os
 
-from validation import Validation
+from resources.validation import Validation
 
 menu_active = True
 

@@ -1,8 +1,9 @@
 import os
 import sqlite3
 import time
+import sys
 
-from validation import Validation
+from resources.validation import Validation
 
 admin_menu_active = True
 
@@ -50,7 +51,11 @@ while admin_menu_active == True:
                     found_account = False
                     x = x + 1
                 if found_account == True:
-                        print("Name:" + str(Validation.data[x][0]) + "\n" + "Surname:" + str(Validation.data[x][1]) + "\n" + "Username:" + str(Validation.data[x][2]) + "\n" + "Password: ********" + "\n\n----------QUIZ STATISITCS----------\n\n" + quiz1 + ": " + str(Validation.data[x][4]) + "\n" + quiz2 + ": " + str(Validation.data[x][5]) + "\n" + quiz3 + ": " + str(Validation.data[x][6]))
+                        print("Name:" + str(Validation.data[x][0]) + "\n" + "Surname:" + str(Validation.data[x][1]) + "\n" + "Username:" + str(Validation.data[x][2]) + "\n" + "Password: ********\n\n")
+                        print("----------QUIZ STATISITCS----------\n\n" + quiz1 + ": \n" + " Score: " + str(Validation.data[x][5]) + "\n" + " Percentage: " + str(Validation.data[x][6]) + "%\n" + " Grade: " + str(Validation.data[x][7]) + "\n Attempts: " + str(str(Validation.data[x][8])) + "\n\n")
+                        print(quiz2 + ": \n" + " Score: " + str(Validation.data[x][9]) + "\n" + " Percentage: " + str(Validation.data[x][10]) + "%\n" + " Grade: " + str(Validation.data[x][11]) + "\n Attempts: " + str(str(Validation.data[x][12])) + "\n\n")
+                        #print(quiz2 + ": \n" + " Score: " + str(Validation.data[x][9]) + "\n" + " Percentage: " + str(Validation.data[x][10]) + "%\n" + " Grade: " + str(Validation.data[x][11]) + "\n Attempts: " + str(str(Validation.data[x][12])) + "\n\n")
+                        
                         input("\nPress any button to return back.")
                         os.system('cls')
         else:
@@ -124,7 +129,7 @@ while admin_menu_active == True:
         os.system('cls')
         choice_admin = input("Please choose from the options below: \n\n   [1] New Admin Account\n   [2] Existing User\n   [3] Remove Admin\n\nChoice: ")
         if choice_admin == "1":
-            """os.system('cls')
+            os.system('cls')
             first_name = input("Please type in the Admins first name: ") # string varible to hold their first name
             surname = input("Please type in the Admins surname: ") # string varible to hold their second name
             user = input("Please type in the Admins Custom Username: ")
@@ -137,11 +142,20 @@ while admin_menu_active == True:
     
                 if new_password == new_password_r: # checks if the password is correct or not
                     pass_match = True # makes the boolean True to end the loop
-                    #Validation.create_admim(first_name, surname, user, new_password) # calls the function from Validation Class to create a new user with the information provided
-    
+                    
+                    connection = sqlite3.connect("data\database.db")
+                    cur = connection.cursor()
+                    cur.execute("INSERT INTO accounts (name, surname, username, password, admin) VALUES (?,?,?,?,1)",
+                    (first_name, surname, user.lower(), new_password))
+                    connection.commit()
+                    cur.close()
+        
+                    print("New Admin Account Created \nUsername: " + user) # displayes their new generated username
+                    time.sleep(1)
+                    os.system('cls')
                 else:
                     print("Passwords do not match, please try again. ") # displays error and asks to type their password in again
-                    pass_match = False # keeps the loop going."""
+                    pass_match = False # keeps the loop going.
         elif choice_admin == '2':
             os.system('cls')
             user_search = input("[SEARCH] Username to Add: ")
@@ -160,8 +174,7 @@ while admin_menu_active == True:
     
                             connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
                             cur = connection.cursor()
-    
-                            cur.execute("UPDATE accounts SET admin = 1 WHERE name = (?)", (user_search,))
+                            cur.execute("UPDATE accounts SET admin = 1 WHERE username = (?)", (user_search.lower(),))
                             connection.commit()
                             cur.close()
     
@@ -190,7 +203,7 @@ while admin_menu_active == True:
                             connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
                             cur = connection.cursor()
     
-                            cur.execute("UPDATE accounts SET admin = (?) WHERE name = (?)", (0, user_search))
+                            cur.execute("UPDATE accounts SET admin = 0 WHERE username = (?)", (user_search.lower(),))
                             connection.commit()
                             connection.close()
     
@@ -208,10 +221,11 @@ while admin_menu_active == True:
     #################
     elif choice == "4":
         os.system('cls')
-        Validation.login_success = False
-        menu_active = False
+        Validation.login_success = False # Doesn't actually work, still loops back. 
+        menu_active = False # Solution: Temp use sys.exit(0)
         print("You have successfully logged off.")
         time.sleep(1)
+        sys.exit(0)
     
     else:
         os.system('cls')

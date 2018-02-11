@@ -21,11 +21,10 @@ class Quiz:
     def get_database(self):
         connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
         cur = connection.cursor()
-        
         quiz_attempts = self.quiz.lower() + "_quiz_attempts"
-        cur.execute("SELECT " + quiz_attempts + " FROM accounts WHERE username = (?)", (self.current_user,))
+        cur.execute("SELECT " + quiz_attempts + " FROM accounts WHERE username = (?)", (self.current_user.lower(),))
         attempts = cur.fetchone()
-        if attempts == type(None):
+        if attempts is None:
             self.attempts = 0
         else:
             self.attempts = attempts[0]
@@ -94,12 +93,14 @@ class Quiz:
                     x = x + 1
 
                 answer = input("Please choose the correct answer: ")
-
+                
                 if answer == correct_answer:
                     print("Correct!\n")
+                    time.sleep(1)
                     self.score = self.score + 1
                 else:
                     print("Incorrect!\n")
+                    time.sleep(1)
         elif enter == "n":
             self.quiz_start = False
             print("Returning to Main Menu..")               
@@ -122,7 +123,7 @@ class Quiz:
             self.grade = "A*"
 
         print("Congratulations! You have now completed the " + self.quiz + " Quiz!\nTotal Score: " + str(self.score) + "\nPercentage: " + str(self.percentage) + "\nGrade: " + str(self.grade))
-        input()
+        input("Press Enter to Continue..")
         os.system('cls')
         
     def update_database(self):        
@@ -138,10 +139,10 @@ class Quiz:
         
         attempts = self.attempts + 1
         
-        cur.execute("UPDATE accounts SET "+quiz_score+" = (?) WHERE name = (?)", (self.score, self.current_user))
-        cur.execute("UPDATE accounts SET "+quiz_percentage+" = (?) WHERE name = (?)", (self.percentage, self.current_user))
-        cur.execute("UPDATE accounts SET "+quiz_grade+" = (?) WHERE name = (?)", (self.grade, self.current_user))
-        cur.execute("UPDATE accounts SET "+quiz_attempts+" = (?) WHERE name = (?)", (attempts, self.current_user))
+        cur.execute("UPDATE accounts SET "+quiz_score+" = (?) WHERE username = (?)", (self.score, self.current_user.lower()))
+        cur.execute("UPDATE accounts SET "+quiz_percentage+" = (?) WHERE username = (?)", (self.percentage, self.current_user.lower()))
+        cur.execute("UPDATE accounts SET "+quiz_grade+" = (?) WHERE username = (?)", (self.grade, self.current_user.lower()))
+        cur.execute("UPDATE accounts SET "+quiz_attempts+" = (?) WHERE username = (?)", (attempts, self.current_user.lower()))
         connection.commit()
         
         cur.execute("SELECT AVG("+quiz_score+") FROM accounts")

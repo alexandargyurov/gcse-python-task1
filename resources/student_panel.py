@@ -8,8 +8,7 @@ from fileinput import close
 
 def start_quiz(quiz):
     os.system('cls')
-    
-    Quizz = Quiz(quiz, Validation.current_user) #this defines that the "Quiz" is using the "Quiz()" class from quiz_format.py file
+    Quizz = Quiz(quiz, Validation.current_username) #this defines that the "Quiz" is using the "Quiz()" class from quiz_format.py file
     Quizz.get_database()
     
     Quizz.get_questions()
@@ -43,6 +42,7 @@ while quiz_select_menu_active == True:
         os.system('cls')
         print("Function Disabled") # task only requires to test 2 subjects.
         time.sleep(1)
+        os.system('cls')
         #start_quiz(quiz3)
     
     elif choice.lower() == "4":
