@@ -78,7 +78,7 @@ while admin_menu_active == True:
             
             quiz_db_name = quiz1.lower()+"_quiz_stats"
             
-            connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+            connection = sqlite3.connect("data\database.db")
             cur = connection.cursor()
             
             cur.execute("SELECT * FROM {0}".format(quiz_db_name))
@@ -93,7 +93,7 @@ while admin_menu_active == True:
             
             quiz_db_name = quiz2.lower()+"_quiz_stats"
             
-            connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+            connection = sqlite3.connect("data\database.db")
             cur = connection.cursor()
             
             cur.execute("SELECT * FROM {0}".format(quiz_db_name))
@@ -108,7 +108,7 @@ while admin_menu_active == True:
             
             quiz_db_name = quiz3.lower()+"_quiz_stats"
             
-            connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+            connection = sqlite3.connect("data\database.db")
             cur = connection.cursor()
             
             cur.execute("SELECT * FROM {0}".format(quiz_db_name))
@@ -172,7 +172,7 @@ while admin_menu_active == True:
                         add = input("\nDo you wish to add this user to the Administrator list? [Y/N] \n Note: THIS WILL GIVE THEM FULL ACCESS TO THE ADMIN PANEL! \n Choice: ")
                         if add == "Y":
     
-                            connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+                            connection = sqlite3.connect("data\database.db")
                             cur = connection.cursor()
                             cur.execute("UPDATE accounts SET admin = 1 WHERE username = (?)", (user_search.lower(),))
                             connection.commit()
@@ -200,7 +200,7 @@ while admin_menu_active == True:
                         add = input("\nDo you wish to REMOVE this user to the Administrator list? [Y/N] \n Note: THIS WILL REMOVE FULL ACCESS TO THE ADMIN PANEL AND MAKE THEM A STUDENT ACCOUNT! \n Choice: ")
                         if add == "Y":
     
-                            connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+                            connection = sqlite3.connect("data\database.db")
                             cur = connection.cursor()
     
                             cur.execute("UPDATE accounts SET admin = 0 WHERE username = (?)", (user_search.lower(),))
