@@ -1,4 +1,4 @@
-# gcse-python-task3
+# gcse-python-task1
 OCR Computer Science GCSE Programming Task CA. Developed in Python.
 
 Fergus is creating a quiz that tests students’ knowledge topics*, such as:
