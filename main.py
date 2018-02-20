@@ -5,7 +5,7 @@ import sqlite3
 from resources.login import Validation
 
 main_menu_active = True
-    
+
 while Validation.login_success == True:
     os.system('cls')
 
@@ -15,4 +15,5 @@ while Validation.login_success == True:
             import resources.admin_panel
         else:
             import resources.student_panel
-            
+
+

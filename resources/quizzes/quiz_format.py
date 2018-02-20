@@ -17,9 +17,9 @@ class Quiz:
         self.quiz = quiz
         self.current_user = current_user
         self.quiz_start = False
-        
+
     def get_database(self):
-        connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+        connection = sqlite3.connect("data\database.db")
         cur = connection.cursor()
         quiz_attempts = self.quiz.lower() + "_quiz_attempts"
         cur.execute("SELECT " + quiz_attempts + " FROM accounts WHERE username = (?)", (self.current_user.lower(),))
@@ -28,9 +28,9 @@ class Quiz:
             self.attempts = 0
         else:
             self.attempts = attempts[0]
-            
+
         cur.close()
-        
+
     def get_questions(self):
 
         quiz_to_get = self.quiz.lower() + "_q.csv"
@@ -49,7 +49,7 @@ class Quiz:
 
         enter = input("\nDo you wish to continue? [Y/N]   ").lower()
         os.system('cls')
-        
+
         if enter == "y":
             self.quiz_start = True
             difficulty = input("\nPlease choose your difficulty:\n [EASY/MEDIUM/HARD] \nDefualt: Easy\n\nDiffuculty: ").lower()
@@ -78,7 +78,7 @@ class Quiz:
 
                     choices_availblilty = [1,2,3,4]
                     letter_availblilty = ['A','B','C','D']
-                    
+
 
                 print("Question " + str(noQ) + ":\n" + str(self.data[noQ][0]))
 
@@ -93,7 +93,7 @@ class Quiz:
                     x = x + 1
 
                 answer = input("Please choose the correct answer: ")
-                
+
                 if answer == correct_answer:
                     print("Correct!\n")
                     time.sleep(1)
@@ -103,12 +103,12 @@ class Quiz:
                     time.sleep(1)
         elif enter == "n":
             self.quiz_start = False
-            print("Returning to Main Menu..")               
+            print("Returning to Main Menu..")
             time.sleep(1)
 
     def finalise_score(self):
         self.percentage = (self.score / self.total_score) * 100
-            
+
         if self.percentage <= 20:
             self.grade = "F"
         elif 20 < self.percentage <= 30:
@@ -125,54 +125,54 @@ class Quiz:
         print("Congratulations! You have now completed the " + self.quiz + " Quiz!\nTotal Score: " + str(self.score) + "\nPercentage: " + str(self.percentage) + "\nGrade: " + str(self.grade))
         input("Press Enter to Continue..")
         os.system('cls')
-        
-    def update_database(self):        
-        connection = sqlite3.connect("D:\Computer Science\gcse-python-task\data\database.db")
+
+    def update_database(self):
+        connection = sqlite3.connect("data\database.db")
         cur = connection.cursor()
-        
+
         quiz_db_name = self.quiz+"_quiz_stats"
-        
+
         quiz_score = self.quiz+"_quiz_score"
         quiz_percentage = self.quiz+"_quiz_percentage"
         quiz_grade = self.quiz+"_quiz_grade"
         quiz_attempts = self.quiz+"_quiz_attempts"
-        
+
         attempts = self.attempts + 1
-        
+
         cur.execute("UPDATE accounts SET "+quiz_score+" = (?) WHERE username = (?)", (self.score, self.current_user.lower()))
         cur.execute("UPDATE accounts SET "+quiz_percentage+" = (?) WHERE username = (?)", (self.percentage, self.current_user.lower()))
         cur.execute("UPDATE accounts SET "+quiz_grade+" = (?) WHERE username = (?)", (self.grade, self.current_user.lower()))
         cur.execute("UPDATE accounts SET "+quiz_attempts+" = (?) WHERE username = (?)", (attempts, self.current_user.lower()))
         connection.commit()
-        
+
         cur.execute("SELECT AVG("+quiz_score+") FROM accounts")
         average_quiz_score = cur.fetchone()
         average_quiz_score = round(average_quiz_score[0],1) # rounds the value to 1 decimal place
         connection.commit()
-        
+
         cur.execute("SELECT AVG("+quiz_percentage+") FROM accounts")
         average_quiz_percentage = cur.fetchone()
         average_quiz_percentage = round(average_quiz_percentage[0],1) # rounds the value to 1 decimal place
         connection.commit()
-        
+
         cur.execute("SELECT AVG("+quiz_percentage+") FROM accounts")
         average_quiz_percentage = cur.fetchone()
         average_quiz_percentage = round(average_quiz_percentage[0],1)
         connection.commit()
-        
+
         cur.execute("SELECT AVG("+quiz_grade+") FROM accounts")
         average_quiz_grade = cur.fetchone()
         average_quiz_grade = round(average_quiz_grade[0],1)
         connection.commit()
-        
+
         cur.execute("SELECT TOTAL("+quiz_attempts+") FROM accounts")
         quiz_attempts = cur.fetchone()
         quiz_attempts = int(quiz_attempts[0])
         connection.commit()
-        
+
         cur.execute("UPDATE "+quiz_db_name+" SET average_score = (?)", (average_quiz_score,))
         cur.execute("UPDATE "+quiz_db_name+" SET average_percentage = (?)", (average_quiz_percentage,))
         cur.execute("UPDATE "+quiz_db_name+" SET attempted_times = (?)", (quiz_attempts,))
-        
+
         connection.commit()
         cur.close()
